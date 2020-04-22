@@ -60,11 +60,11 @@ func TestDecodeSearchMovieGRPCResponse(t *testing.T) {
 				TotalResults: dummyRes.TotalResults,
 				Search: []MovieItem{
 					{
-						Title:  "Batman Beyond: Return of the Joker",
-						Year:   "2000",
-						ImdbID: "tt0233298",
-						Type:   "movie",
-						Poster: "https://m.media-amazon.com/images/M/MV5BNmRmODEwNzctYzU1MS00ZDQ1LWI2NWMtZWFkNTQwNDg1ZDFiXkEyXkFqcGdeQXVyNTI4MjkwNjA@._V1_SX300.jpg",
+						Title:  (*dummyRes).Search[0].Title,
+						Year:   (*dummyRes).Search[0].Year,
+						ImdbID: (*dummyRes).Search[0].ImdbID,
+						Type:   (*dummyRes).Search[0].Type,
+						Poster: (*dummyRes).Search[0].Poster,
 					},
 				},
 			},
