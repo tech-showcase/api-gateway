@@ -13,17 +13,17 @@ func TestEncodeSearchMovieGRPCRequest(t *testing.T) {
 			Keyword:    "Batman",
 			PageNumber: 1,
 		}
-		expectedRes := &movieProto.SearchRequest{
+		expectedReq := &movieProto.SearchRequest{
 			Keyword:    dummyReq.Keyword,
 			PageNumber: int32(dummyReq.PageNumber),
 		}
 
 		ctx := context.Background()
-		resp, err := encodeSearchMovieGRPCRequest(ctx, dummyReq)
+		reqAfterTranslation, err := encodeSearchMovieGRPCRequest(ctx, dummyReq)
 
 		if err != nil {
 			t.Fatal("an error has occurred")
-		} else if !reflect.DeepEqual(expectedRes, resp) {
+		} else if !reflect.DeepEqual(expectedReq, reqAfterTranslation) {
 			t.Fatal("unexpected output")
 		}
 	})
@@ -34,7 +34,8 @@ func TestEncodeSearchMovieGRPCRequest(t *testing.T) {
 		_, err := encodeSearchMovieGRPCRequest(ctx, dummyReq)
 
 		if err == nil {
-			t.Fatal("an error should occurred")
+			t.Fatal("an error should occur")
 		}
 	})
 }
+
