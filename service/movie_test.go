@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/tech-showcase/api-gateway/model"
 	"reflect"
@@ -19,9 +18,6 @@ func TestMovieService_Search(t *testing.T) {
 	ctx := context.Background()
 	movieService := NewMovieService(dummyEndpoints)
 	movies, err := movieService.Search(ctx, "Batman", 1)
-
-	fmt.Println(movies)
-	fmt.Println(expectedOutput)
 
 	if err != nil {
 		t.Fatal("an error has occurred")
