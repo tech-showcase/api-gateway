@@ -14,7 +14,7 @@ func SearchMovieFactory() sd.Factory {
 	return func(instance string) (endpoint.Endpoint, io.Closer, error) {
 		movieClientEndpoints, conn := model.NewMovieGRPCClient(instance)
 		movieService := service.NewMovieService(movieClientEndpoints)
-		searchMovieEndpoint := makeSearchMovieHTTPEndpoint(movieService)
+		searchMovieEndpoint := MakeSearchMovieHTTPEndpoint(movieService)
 
 		return searchMovieEndpoint, conn, nil
 	}

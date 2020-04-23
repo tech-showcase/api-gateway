@@ -16,7 +16,7 @@ type (
 	}
 )
 
-func makeSearchMovieHTTPEndpoint(s service.MovieService) endpoint.Endpoint {
+func MakeSearchMovieHTTPEndpoint(s service.MovieService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(presenter.SearchMovieRequest)
 		result, err := s.Search(ctx, req.Keyword, req.PageNumber)
