@@ -38,5 +38,6 @@ func decodeSearchMovieHTTPRequest(_ context.Context, r *http.Request) (interface
 }
 
 func encodeHTTPResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Add("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(response)
 }
