@@ -19,6 +19,7 @@ The whole system will be used to present technology show case.
   "entertainment_service_address": "localhost:8082"
 }
 ```
+change `localhost` with `docker0` IP address.
 `consul_address` is currently not used cause the related feature is under maintenance
 - Build and run docker image as below
 ```shell script
