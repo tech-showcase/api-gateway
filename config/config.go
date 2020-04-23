@@ -8,7 +8,8 @@ import (
 
 type (
 	Config struct {
-		ConsulAddress string `json:"consul_address"`
+		ConsulAddress               string `json:"consul_address"`
+		EntertainmentServiceAddress string `json:"entertainment_service_address"`
 	}
 )
 
