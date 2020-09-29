@@ -6,7 +6,7 @@ import (
 	"github.com/go-kit/kit/sd/lb"
 	"github.com/gorilla/mux"
 	"github.com/tech-showcase/api-gateway/cmd"
-	"github.com/tech-showcase/api-gateway/global"
+	"github.com/tech-showcase/api-gateway/config"
 	"github.com/tech-showcase/api-gateway/model"
 	"github.com/tech-showcase/api-gateway/service"
 	"github.com/tech-showcase/api-gateway/transport"
@@ -14,11 +14,15 @@ import (
 	"time"
 )
 
+func init() {
+	config.Instance = config.Read()
+}
+
 func main() {
 	fmt.Println("Hi, I am API Gateway!")
 
 	args := cmd.Parse()
-	config := global.Configuration
+	config := config.Instance
 
 	//consulClient, err := helper.NewConsul(config.ConsulAddress)
 	//if err != nil {

@@ -6,32 +6,29 @@ import (
 	"testing"
 )
 
-func TestParse(t *testing.T) {
-	expectedOutput := Config{
-		ConsulAddress: "http://dummy.address/",
-	}
+func TestRead(t *testing.T) {
+	setDummyEnvVar()
+	expectedOutput := getDummyConfig()
 
-	configPath := "config-example.json"
-	os.Setenv("DEV_CONFIG_PATH", configPath)
+	config := Read()
 
-	config, err := Parse()
-
-	if err != nil {
-		t.Fatal("an error has occurred")
-	} else if !reflect.DeepEqual(config, expectedOutput) {
+	if !reflect.DeepEqual(config, expectedOutput) {
 		t.Fatal("unexpected output")
 	}
 }
 
-func TestGetPath(t *testing.T) {
-	expectedOutput := "config/config-prod.json"
+func setDummyEnvVar() {
+	dummyConfig := getDummyConfig()
 
-	os.Setenv("ENVIRONMENT", "PROD")
-	os.Setenv("PROD_CONFIG_PATH", expectedOutput)
+	os.Setenv("CONSUL_ADDRESS", dummyConfig.ConsulAddress)
+	os.Setenv("ENTERTAINMENT_SERVICE_ADDRESS", dummyConfig.EntertainmentServiceAddress)
+}
 
-	configPath := GetPath()
-
-	if configPath != expectedOutput {
-		t.Fatal("unexpected output")
+func getDummyConfig() Config {
+	dummyConfig := Config{
+		ConsulAddress:               "http://localhost",
+		EntertainmentServiceAddress: "http://localhost",
 	}
+
+	return dummyConfig
 }
