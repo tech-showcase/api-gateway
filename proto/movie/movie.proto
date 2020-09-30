@@ -7,19 +7,19 @@ service Movie {
 
 message SearchRequest {
   string keyword = 1;
-  int32 pageNumber = 2;
+  int32 page_number = 2;
 }
 
 message SearchResponse {
   message MovieItem {
-    string Title = 1;
-    string Year = 2;
-    string imdbID = 3;
-    string Type = 4;
-    string Poster = 5;
+    string title = 1;
+    string year = 2;
+    string imdb_id = 3;
+    string type = 4;
+    string poster = 5;
   }
 
-  repeated MovieItem Search = 1;
-  string totalResults = 2;
-  string Response = 3;
+  repeated MovieItem search = 1;
+  string total_results = 2;
+  string response = 3;
 }
