@@ -12,17 +12,19 @@ The whole system will be used to present technology show case.
 ### How to run
 #### Docker
 - Install docker
-- Create `config-dev.json` under `config` dir which contains following content
-```json
-{
-  "consul_address": "http://consul-server:8500",
-  "entertainment_service_address": "localhost:8082"
-}
+- Create following environment variable and fill it with the right value
+```shell script
+  CONSUL_ADDRESS=http://consul-server-address,
+  ENTERTAINMENT_SERVICE_ADDRESS=entertainment-service-address
 ```
-change `localhost` with `docker0` IP address.
-`consul_address` is currently not used cause the related feature is under maintenance
+`CONSUL_ADDRESS` is currently not used cause the service discovery feature is under maintenance
 - Build and run docker image as below
 ```shell script
 $ docker build -t api-gateway .
 $ docker run -p 8081:8080 api-gateway
 ```
+
+### Tech / Dependency
+- [Go kit - service](https://github.com/go-kit/kit)
+- [gRPC - api](https://grpc.io/)
+- [Gorilla mux - api](https://github.com/gorilla/mux)
