@@ -22,7 +22,7 @@ You can use gRPC by:
 - Create following environment variable and fill it with the right value
 ```shell script
   CONSUL_ADDRESS=http://consul-server-address
-  ENTERTAINMENT_SERVICE_ADDRESS=entertainment-service-address
+  ENTERTAINMENT_SERVICE_ADDRESS=entertainment-service-address-1,entertainment-service-address-2
 ```
 `CONSUL_ADDRESS` is currently not used cause the service discovery feature is under maintenance
 - Build and run docker image as below
