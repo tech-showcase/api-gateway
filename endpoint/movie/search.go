@@ -22,6 +22,9 @@ func makeSearchMovieEndpoint(movieService service.MovieService) endpoint.Endpoin
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(SearchMovieRequest)
 		result, err := movieService.Search(ctx, req.Keyword, req.PageNumber)
+		if err != nil {
+			return SearchMovieRequest{}, err
+		}
 
 		res := SearchMovieResponse{
 			SearchMovieResponse: movie.SearchMovieResponse{
