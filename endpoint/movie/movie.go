@@ -14,10 +14,12 @@ type (
 	}
 )
 
-func NewMovieEndpoint(movieService service.MovieService) (movieEndpoint Endpoint) {
+func NewMovieEndpoint(movieServices []service.MovieService) (movieEndpoint Endpoint) {
 	endpointer := sd.FixedEndpointer{}
-	searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
-	endpointer = append(endpointer, searchMovieEndpoint)
+	for _, movieService := range movieServices {
+		searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
+		endpointer = append(endpointer, searchMovieEndpoint)
+	}
 
 	balancer := lb.NewRoundRobin(endpointer)
 	retry := lb.Retry(3, 500*time.Millisecond, balancer)

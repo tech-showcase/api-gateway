@@ -29,16 +29,16 @@ type (
 	}
 )
 
-func NewMovieClientEndpoint(entertainmentServiceAddress string) ClientEndpoint {
+func NewMovieClientEndpoint(entertainmentServiceAddress string) (ClientEndpoint, error) {
 	instance := clientEndpoint{}
 
 	conn, err := grpc.Dial(entertainmentServiceAddress, grpc.WithInsecure())
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	instance.conn = conn
 
-	return &instance
+	return &instance, nil
 }
 
 func (instance *clientEndpoint) Search(ctx context.Context, req interface{}) (res interface{}, err error) {

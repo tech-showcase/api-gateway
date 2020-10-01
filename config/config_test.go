@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -21,13 +22,16 @@ func setDummyEnvVar() {
 	dummyConfig := getDummyConfig()
 
 	os.Setenv("CONSUL_ADDRESS", dummyConfig.ConsulAddress)
-	os.Setenv("ENTERTAINMENT_SERVICE_ADDRESS", dummyConfig.EntertainmentServiceAddress)
+	os.Setenv("ENTERTAINMENT_SERVICE_ADDRESS", strings.Join(dummyConfig.EntertainmentServiceAddresses, arrayDelimiter))
 }
 
 func getDummyConfig() Config {
 	dummyConfig := Config{
-		ConsulAddress:               "http://localhost",
-		EntertainmentServiceAddress: "localhost",
+		ConsulAddress: "http://localhost",
+		EntertainmentServiceAddresses: []string{
+			"localhost",
+			"127.0.0.1",
+		},
 	}
 
 	return dummyConfig
