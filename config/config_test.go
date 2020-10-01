@@ -27,7 +27,7 @@ func setDummyEnvVar() {
 func getDummyConfig() Config {
 	dummyConfig := Config{
 		ConsulAddress:               "http://localhost",
-		EntertainmentServiceAddress: "http://localhost",
+		EntertainmentServiceAddress: "localhost",
 	}
 
 	return dummyConfig

@@ -21,7 +21,7 @@ func Read() (config Config) {
 
 func readFromEnvVar() (config Config) {
 	config.ConsulAddress = readEnvVarWithDefaultValue("CONSUL_ADDRESS", "http://localhost")
-	config.EntertainmentServiceAddress = readEnvVarWithDefaultValue("ENTERTAINMENT_SERVICE_ADDRESS", "http://localhost")
+	config.EntertainmentServiceAddress = readEnvVarWithDefaultValue("ENTERTAINMENT_SERVICE_ADDRESS", "localhost")
 
 	return
 }
