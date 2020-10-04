@@ -2,8 +2,7 @@ package movie
 
 import (
 	"context"
-	grpctransport "github.com/go-kit/kit/transport/grpc"
-	movieProto "github.com/tech-showcase/api-gateway/proto/movie"
+	"github.com/go-kit/kit/endpoint"
 	"google.golang.org/grpc"
 )
 
@@ -22,7 +21,8 @@ type (
 	}
 
 	clientEndpoint struct {
-		conn *grpc.ClientConn
+		conn   *grpc.ClientConn
+		search endpoint.Endpoint
 	}
 	ClientEndpoint interface {
 		Search(context.Context, interface{}) (interface{}, error)
@@ -38,22 +38,13 @@ func NewMovieClientEndpoint(entertainmentServiceAddress string) (ClientEndpoint,
 	}
 	instance.conn = conn
 
+	instance.search = makeSearchMovieClientEndpoint(conn)
+
 	return &instance, nil
 }
 
 func (instance *clientEndpoint) Search(ctx context.Context, req interface{}) (res interface{}, err error) {
-	clientOptions := make([]grpctransport.ClientOption, 0)
-	searchMovieEndpoint := grpctransport.NewClient(
-		instance.conn,
-		"Movie",
-		"Search",
-		encodeSearchMovieRequest,
-		decodeSearchMovieResponse,
-		movieProto.SearchResponse{},
-		clientOptions...,
-	).Endpoint()
-
-	res, err = searchMovieEndpoint(ctx, req)
+	res, err = instance.search(ctx, req)
 	if err != nil {
 		return nil, err
 	}

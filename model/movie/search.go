@@ -3,7 +3,10 @@ package movie
 import (
 	"context"
 	"errors"
+	"github.com/go-kit/kit/endpoint"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
 	movieProto "github.com/tech-showcase/api-gateway/proto/movie"
+	"google.golang.org/grpc"
 )
 
 type (
@@ -15,6 +18,21 @@ type (
 		ListPerPage
 	}
 )
+
+func makeSearchMovieClientEndpoint(conn *grpc.ClientConn) endpoint.Endpoint {
+	clientOptions := make([]grpctransport.ClientOption, 0)
+	searchMovieEndpoint := grpctransport.NewClient(
+		conn,
+		"Movie",
+		"Search",
+		encodeSearchMovieRequest,
+		decodeSearchMovieResponse,
+		movieProto.SearchResponse{},
+		clientOptions...,
+	).Endpoint()
+
+	return searchMovieEndpoint
+}
 
 func encodeSearchMovieRequest(_ context.Context, r interface{}) (interface{}, error) {
 	if req, ok := r.(SearchMovieRequest); ok {
