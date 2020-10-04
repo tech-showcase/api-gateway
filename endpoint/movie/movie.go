@@ -1,6 +1,7 @@
 package movie
 
 import (
+	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd"
 	"github.com/go-kit/kit/sd/lb"
 	"github.com/tech-showcase/api-gateway/endpoint"
@@ -14,10 +15,10 @@ type (
 	}
 )
 
-func NewMovieEndpoint(movieServices []service.MovieService) (movieEndpoint Endpoint) {
+func NewMovieEndpoint(movieServices []service.MovieService, logger log.Logger) (movieEndpoint Endpoint) {
 	endpointer := sd.FixedEndpointer{}
 	for _, movieService := range movieServices {
-		searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
+		searchMovieEndpoint := makeSearchMovieEndpoint(movieService, logger)
 		endpointer = append(endpointer, searchMovieEndpoint)
 	}
 
