@@ -6,8 +6,13 @@ This service is part of a big system.
 The whole system will be used to present **micro-services without an orchestrator**.
 
 ### Features
-- Forward request from a client to corresponding service.
-- Translate http request/response to gRPC request/response.
+- Forward request from a client to corresponding service:
+    - Entertainment service:
+        - Translate http request/response to gRPC request/response.
+        - Load balance request to available services.
+        - Auto-retry if any error has occurred.
+        - Prevent request failure using circuit breaker mechanism.
+
 
 ### API
 Please refer to all proto file [here](proto) for more detail about the provided API.
