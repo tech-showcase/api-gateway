@@ -22,11 +22,10 @@ func NewCovid19Service(covid19ClientEndpoint covid19.ClientEndpoint) Covid19Serv
 }
 
 func (instance *covid19Service) Get(ctx context.Context, req covid19.GetCovid19Request) (res covid19.GetCovid19Response, err error) {
-	response, err := instance.covid19ClientEndpoint.Get(ctx, req)
+	res, err = instance.covid19ClientEndpoint.Get(ctx, req)
 	if err != nil {
 		return
 	}
 
-	res = response
 	return
 }
