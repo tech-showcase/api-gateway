@@ -25,7 +25,7 @@ type (
 		search endpoint.Endpoint
 	}
 	ClientEndpoint interface {
-		Search(context.Context, interface{}) (interface{}, error)
+		Search(context.Context, SearchMovieRequest) (SearchMovieResponse, error)
 	}
 )
 
@@ -43,11 +43,12 @@ func NewMovieClientEndpoint(entertainmentServiceAddress string) (ClientEndpoint,
 	return &instance, nil
 }
 
-func (instance *clientEndpoint) Search(ctx context.Context, req interface{}) (res interface{}, err error) {
-	res, err = instance.search(ctx, req)
+func (instance *clientEndpoint) Search(ctx context.Context, req SearchMovieRequest) (res SearchMovieResponse, err error) {
+	response, err := instance.search(ctx, req)
 	if err != nil {
-		return nil, err
+		return SearchMovieResponse{}, err
 	}
 
+	res = response.(SearchMovieResponse)
 	return res, nil
 }

@@ -31,8 +31,6 @@ func (instance *movieService) Search(ctx context.Context, keyword string, pageNu
 		return
 	}
 
-	searchMovieResponse := response.(movie.SearchMovieResponse)
-	movies = searchMovieResponse.ListPerPage
-
+	movies = response.ListPerPage
 	return
 }
