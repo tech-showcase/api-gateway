@@ -23,12 +23,17 @@ func setDummyEnvVar() {
 
 	os.Setenv("CONSUL_ADDRESS", dummyConfig.ConsulAddress)
 	os.Setenv("ENTERTAINMENT_SERVICE_ADDRESS", strings.Join(dummyConfig.EntertainmentServiceAddresses, arrayDelimiter))
+	os.Setenv("COVID19_SERVICE_ADDRESS", strings.Join(dummyConfig.Covid19ServiceAddresses, arrayDelimiter))
 }
 
 func getDummyConfig() Config {
 	dummyConfig := Config{
 		ConsulAddress: "http://localhost",
 		EntertainmentServiceAddresses: []string{
+			"localhost",
+			"127.0.0.1",
+		},
+		Covid19ServiceAddresses: []string{
 			"localhost",
 			"127.0.0.1",
 		},
