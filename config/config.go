@@ -9,6 +9,7 @@ type (
 	Config struct {
 		ConsulAddress                 string   `json:"consul_address"`
 		EntertainmentServiceAddresses []string `json:"entertainment_service_address"`
+		Covid19ServiceAddresses       []string `json:"covid19_service_address"`
 	}
 )
 
@@ -27,6 +28,7 @@ func Read() (config Config) {
 func readFromEnvVar() (config Config) {
 	config.ConsulAddress = readEnvVarWithDefaultValue("CONSUL_ADDRESS", "http://localhost")
 	config.EntertainmentServiceAddresses = readEnvVarArrayWithDefaultValue("ENTERTAINMENT_SERVICE_ADDRESS", []string{"localhost"})
+	config.Covid19ServiceAddresses = readEnvVarArrayWithDefaultValue("COVID19_SERVICE_ADDRESS", []string{"localhost"})
 
 	return
 }
