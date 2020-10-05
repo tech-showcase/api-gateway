@@ -10,7 +10,7 @@ type (
 		movieClientEndpoint movie.ClientEndpoint
 	}
 	MovieService interface {
-		Search(context.Context, string, int) (movie.ListPerPage, error)
+		Search(context.Context, movie.SearchMovieRequest) (movie.SearchMovieResponse, error)
 	}
 )
 
@@ -21,16 +21,11 @@ func NewMovieService(movieClientEndpoint movie.ClientEndpoint) MovieService {
 	return &instance
 }
 
-func (instance *movieService) Search(ctx context.Context, keyword string, pageNumber int) (movies movie.ListPerPage, err error) {
-	request := movie.SearchMovieRequest{
-		Keyword:    keyword,
-		PageNumber: pageNumber,
-	}
-	response, err := instance.movieClientEndpoint.Search(ctx, request)
+func (instance *movieService) Search(ctx context.Context, req movie.SearchMovieRequest) (res movie.SearchMovieResponse, err error) {
+	res, err = instance.movieClientEndpoint.Search(ctx, req)
 	if err != nil {
 		return
 	}
 
-	movies = response.ListPerPage
 	return
 }

@@ -24,15 +24,13 @@ type (
 func makeSearchMovieEndpoint(movieService service.MovieService, logger log.Logger) endpoint.Endpoint {
 	searchMovieEndpoint := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(SearchMovieRequest)
-		result, err := movieService.Search(ctx, req.Keyword, req.PageNumber)
+		result, err := movieService.Search(ctx, req.SearchMovieRequest)
 		if err != nil {
 			return SearchMovieRequest{}, err
 		}
 
 		res := SearchMovieResponse{
-			SearchMovieResponse: movie.SearchMovieResponse{
-				ListPerPage: result,
-			},
+			SearchMovieResponse: result,
 		}
 		return res, nil
 	}
