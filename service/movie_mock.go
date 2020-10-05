@@ -10,9 +10,8 @@ type (
 	dummyClientEndpoint struct{}
 )
 
-func (instance *dummyClientEndpoint) Search(ctx context.Context, req interface{}) (res interface{}, err error) {
-	request := req.(movie.SearchMovieRequest)
-	if request.Keyword == "Batman" && request.PageNumber == 1 {
+func (instance *dummyClientEndpoint) Search(ctx context.Context, req movie.SearchMovieRequest) (res movie.SearchMovieResponse, err error) {
+	if req.Keyword == "Batman" && req.PageNumber == 1 {
 		return getDummyResponse(), nil
 	}
 
