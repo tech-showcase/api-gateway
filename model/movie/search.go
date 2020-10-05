@@ -41,7 +41,7 @@ func encodeSearchMovieRequest(_ context.Context, r interface{}) (interface{}, er
 			PageNumber: int32(req.PageNumber),
 		}, nil
 	} else {
-		return nil, errors.New("format request is wrong")
+		return nil, errors.New("request format is wrong")
 	}
 }
 
@@ -67,6 +67,6 @@ func decodeSearchMovieResponse(_ context.Context, r interface{}) (interface{}, e
 			},
 		}, nil
 	} else {
-		return nil, errors.New("format response is wrong")
+		return nil, errors.New("response format is wrong")
 	}
 }
