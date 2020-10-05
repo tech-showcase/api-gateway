@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
+	"github.com/tech-showcase/api-gateway/helper"
 	"github.com/tech-showcase/api-gateway/middleware"
 	"github.com/tech-showcase/api-gateway/model/covid19"
 	"github.com/tech-showcase/api-gateway/service"
 	"net/http"
-	"time"
 )
 
 type (
@@ -38,16 +38,16 @@ func makeGetCovid19Endpoint(covid19Service service.Covid19Service, logger log.Lo
 }
 
 func decodeGetCovid19Request(_ context.Context, r *http.Request) (interface{}, error) {
-	fromStr := getQueryStringValue(r, "from")
-	from, _ := parseDateTime(fromStr)
+	fromStr := helper.GetQueryStringValue(r, "from")
+	from, _ := helper.ParseDateTime(fromStr)
 
-	toStr := getQueryStringValue(r, "to")
-	to, _ := parseDateTime(toStr)
+	toStr := helper.GetQueryStringValue(r, "to")
+	to, _ := helper.ParseDateTime(toStr)
 
 	req := GetCovid19Request{
 		GetCovid19Request: covid19.GetCovid19Request{
-			Country: getQueryStringValue(r, "country"),
-			Status:  getQueryStringValue(r, "status"),
+			Country: helper.GetQueryStringValue(r, "country"),
+			Status:  helper.GetQueryStringValue(r, "status"),
 			From:    from,
 			To:      to,
 		},
@@ -59,21 +59,4 @@ func decodeGetCovid19Request(_ context.Context, r *http.Request) (interface{}, e
 func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	w.Header().Add("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(response)
-}
-
-func getQueryStringValue(r *http.Request, key string) (value string) {
-	if valueArr, ok := r.URL.Query()[key]; ok {
-		value = valueArr[0]
-	}
-
-	return
-}
-
-func parseDateTime(timeStr string) (value time.Time, err error) {
-	value, err = time.Parse(time.RFC3339Nano, timeStr)
-	if err != nil {
-		return
-	}
-
-	return
 }
