@@ -44,6 +44,8 @@ func NewCovid19ClientEndpoint(covid19ServiceAddress string) (ClientEndpoint, err
 	}
 	instance.address = u
 
+	instance.get = makeGetCovid19ClientEndpoint(u)
+
 	return &instance, nil
 }
 
