@@ -5,13 +5,15 @@ import (
 	"github.com/tech-showcase/api-gateway/endpoint"
 	"github.com/tech-showcase/api-gateway/endpoint/movie"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func NewMovieHTTPServer(movieEndpoint movie.Endpoint) http.Handler {
-	m := http.NewServeMux()
-	m.Handle("/search", makeSearchMovieHTTPHandler(movieEndpoint.Search))
+	r := mux.NewRouter()
+	r.Handle("/movie", makeSearchMovieHTTPHandler(movieEndpoint.Search)).Methods(http.MethodGet)
 
-	return m
+	return r
 }
 
 func makeSearchMovieHTTPHandler(searchMovieEndpoint endpoint.HTTPEndpoint) (handler *httptransport.Server) {

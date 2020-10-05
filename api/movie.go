@@ -8,7 +8,6 @@ import (
 	model "github.com/tech-showcase/api-gateway/model/movie"
 	"github.com/tech-showcase/api-gateway/service"
 	"github.com/tech-showcase/api-gateway/transport"
-	"net/http"
 )
 
 func RegisterMovieHTTPAPI(r *mux.Router) {
@@ -27,5 +26,5 @@ func RegisterMovieHTTPAPI(r *mux.Router) {
 
 	movieEndpoint := endpoint.NewMovieEndpoint(movieServices, loggerInstance)
 	movieServer := transport.NewMovieHTTPServer(movieEndpoint)
-	r.PathPrefix("/movie").Handler(http.StripPrefix("/movie", movieServer))
+	r.PathPrefix("/movie").Handler(movieServer)
 }
