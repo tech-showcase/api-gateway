@@ -29,10 +29,7 @@ func makeGetCovid19Endpoint(covid19Service service.Covid19Service, logger log.Lo
 			return GetCovid19Response{}, err
 		}
 
-		res := GetCovid19Response{
-			GetCovid19Response: result,
-		}
-		return res, nil
+		return GetCovid19Response{GetCovid19Response: result}, nil
 	}
 
 	getCovid19Endpoint = middleware.ApplyCircuitBreaker("getCovid19", getCovid19Endpoint, logger)
