@@ -12,6 +12,11 @@ The whole system will be used to present **micro-services without an orchestrato
         - Load balance request to available services.
         - Auto-retry if any error has occurred.
         - Prevent request failure using circuit breaker mechanism.
+    - Covid-19 service:
+        - Forward http request/response to http request/response.
+        - Load balance request to available services.
+        - Auto-retry if any error has occurred.
+        - Prevent request failure using circuit breaker mechanism.
 
 
 ### API
@@ -28,6 +33,7 @@ You can use gRPC by:
 ```shell script
   CONSUL_ADDRESS=http://consul-server-address
   ENTERTAINMENT_SERVICE_ADDRESS=entertainment-service-address-1,entertainment-service-address-2
+  COVID19_SERVICE_ADDRESS=covid19-service-address-1,covid19-service-address-2
 ```
 `CONSUL_ADDRESS` is currently not used cause the service discovery feature is under maintenance
 - Build and run docker image as below
