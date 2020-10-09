@@ -14,14 +14,14 @@ func init() {
 	helper.LoggerInstance = helper.NewLogger()
 
 	var err error
-	helper.TracerInstance, _, err = helper.NewTracer()
+	helper.TracerInstance, _, err = helper.NewTracer(config.Instance.ServiceName, config.Instance.Tracer.AgentAddress)
 	if err != nil {
 		helper.LoggerInstance.Log("NewTracer", err)
 	}
 }
 
 func main() {
-	fmt.Println("Hi, I am API Gateway!")
+	fmt.Println("Hi, I am " + config.Instance.ServiceName + "!")
 
 	args := cmd.Parse()
 

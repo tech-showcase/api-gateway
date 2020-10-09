@@ -10,9 +10,9 @@ import (
 
 var TracerInstance stdopentracing.Tracer
 
-func NewTracer() (stdopentracing.Tracer, io.Closer, error) {
+func NewTracer(serviceName, agentAddress string) (stdopentracing.Tracer, io.Closer, error) {
 	cfg := config.Configuration{
-		ServiceName: "api-gateway",
+		ServiceName: serviceName,
 		Sampler: &config.SamplerConfig{
 			Type:  "const",
 			Param: 1,
@@ -20,7 +20,7 @@ func NewTracer() (stdopentracing.Tracer, io.Closer, error) {
 		Reporter: &config.ReporterConfig{
 			LogSpans:            true,
 			BufferFlushInterval: 1 * time.Second,
-			LocalAgentHostPort:  "localhost:5775",
+			LocalAgentHostPort:  agentAddress,
 		},
 	}
 
