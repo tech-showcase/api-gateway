@@ -47,7 +47,7 @@ func NewCovid19ClientEndpoint(covid19ServiceAddress string, logger log.Logger, t
 	}
 	instance.address = u
 
-	getCovid19Endpoint := makeGetCovid19ClientEndpoint(u)
+	getCovid19Endpoint := makeGetCovid19ClientEndpoint(u, logger, tracer)
 	getCovid19Endpoint = middleware.ApplyTracerClient("getCovid19-model", getCovid19Endpoint, tracer)
 	getCovid19Endpoint = middleware.ApplyCircuitBreaker("getCovid19", getCovid19Endpoint, logger)
 	instance.get = getCovid19Endpoint
