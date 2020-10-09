@@ -3,6 +3,9 @@ package covid19
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	stdopentracing "github.com/opentracing/opentracing-go"
+	"github.com/tech-showcase/api-gateway/middleware"
 	"net/url"
 	"strings"
 	"time"
@@ -31,7 +34,7 @@ type (
 	}
 )
 
-func NewCovid19ClientEndpoint(covid19ServiceAddress string) (ClientEndpoint, error) {
+func NewCovid19ClientEndpoint(covid19ServiceAddress string, logger log.Logger, tracer stdopentracing.Tracer) (ClientEndpoint, error) {
 	instance := clientEndpoint{}
 
 	if !strings.HasPrefix(covid19ServiceAddress, "http") {
@@ -44,7 +47,10 @@ func NewCovid19ClientEndpoint(covid19ServiceAddress string) (ClientEndpoint, err
 	}
 	instance.address = u
 
-	instance.get = makeGetCovid19ClientEndpoint(u)
+	getCovid19Endpoint := makeGetCovid19ClientEndpoint(u)
+	getCovid19Endpoint = middleware.ApplyTracerClient("getCovid19-model", getCovid19Endpoint, tracer)
+	getCovid19Endpoint = middleware.ApplyCircuitBreaker("getCovid19", getCovid19Endpoint, logger)
+	instance.get = getCovid19Endpoint
 
 	return &instance, nil
 }

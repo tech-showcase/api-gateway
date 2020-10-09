@@ -12,11 +12,12 @@ import (
 
 func RegisterCovid19HTTPAPI(r *mux.Router) {
 	configInstance := config.Instance
+	loggerInstance := helper.LoggerInstance
 	tracerInstance := helper.TracerInstance
 
 	var covid19Services []service.Covid19Service
 	for _, covid19ServiceAddress := range configInstance.Covid19ServiceAddresses {
-		covid19ClientEndpoint, err := model.NewCovid19ClientEndpoint(covid19ServiceAddress)
+		covid19ClientEndpoint, err := model.NewCovid19ClientEndpoint(covid19ServiceAddress, loggerInstance, tracerInstance)
 		if err != nil {
 			panic(err)
 		}
