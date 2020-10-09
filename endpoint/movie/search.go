@@ -28,11 +28,7 @@ func makeSearchMovieEndpoint(movieService service.MovieService) endpoint.Endpoin
 			return SearchMovieRequest{}, err
 		}
 
-		res := SearchMovieResponse{
-			SearchMovieResponse: result,
-		}
-
-		return res, nil
+		return SearchMovieResponse{SearchMovieResponse: result}, nil
 	}
 
 	return searchMovieEndpoint
