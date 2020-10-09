@@ -12,7 +12,7 @@ import (
 
 func RegisterCovid19HTTPAPI(r *mux.Router) {
 	configInstance := config.Instance
-	loggerInstance := helper.LoggerInstance
+	tracerInstance := helper.TracerInstance
 
 	var covid19Services []service.Covid19Service
 	for _, covid19ServiceAddress := range configInstance.Covid19ServiceAddresses {
@@ -24,7 +24,7 @@ func RegisterCovid19HTTPAPI(r *mux.Router) {
 		covid19Services = append(covid19Services, covid19Service)
 	}
 
-	covid19Endpoint := endpoint.NewCovid19Endpoint(covid19Services, loggerInstance)
+	covid19Endpoint := endpoint.NewCovid19Endpoint(covid19Services, tracerInstance)
 	covid19Server := transport.NewCovid19HTTPServer(covid19Endpoint)
 	r.PathPrefix("/covid19").Handler(covid19Server)
 }

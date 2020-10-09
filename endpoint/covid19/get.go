@@ -4,9 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log"
 	"github.com/tech-showcase/api-gateway/helper"
-	"github.com/tech-showcase/api-gateway/middleware"
 	"github.com/tech-showcase/api-gateway/model/covid19"
 	"github.com/tech-showcase/api-gateway/service"
 	"net/http"
@@ -21,7 +19,7 @@ type (
 	}
 )
 
-func makeGetCovid19Endpoint(covid19Service service.Covid19Service, logger log.Logger) endpoint.Endpoint {
+func makeGetCovid19Endpoint(covid19Service service.Covid19Service) endpoint.Endpoint {
 	getCovid19Endpoint := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(GetCovid19Request)
 		result, err := covid19Service.Get(ctx, req.GetCovid19Request)
@@ -31,8 +29,6 @@ func makeGetCovid19Endpoint(covid19Service service.Covid19Service, logger log.Lo
 
 		return GetCovid19Response{GetCovid19Response: result}, nil
 	}
-
-	getCovid19Endpoint = middleware.ApplyCircuitBreaker("getCovid19", getCovid19Endpoint, logger)
 
 	return getCovid19Endpoint
 }
