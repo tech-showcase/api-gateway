@@ -13,10 +13,11 @@ import (
 func RegisterMovieHTTPAPI(r *mux.Router) {
 	configInstance := config.Instance
 	loggerInstance := helper.LoggerInstance
+	tracerInstance := helper.TracerInstance
 
 	var movieServices []service.MovieService
 	for _, entertainmentServiceAddress := range configInstance.EntertainmentServiceAddresses {
-		movieClientEndpoint, err := model.NewMovieClientEndpoint(entertainmentServiceAddress)
+		movieClientEndpoint, err := model.NewMovieClientEndpoint(entertainmentServiceAddress, loggerInstance, tracerInstance)
 		if err != nil {
 			panic(err)
 		}
@@ -24,7 +25,7 @@ func RegisterMovieHTTPAPI(r *mux.Router) {
 		movieServices = append(movieServices, movieService)
 	}
 
-	movieEndpoint := endpoint.NewMovieEndpoint(movieServices, loggerInstance)
+	movieEndpoint := endpoint.NewMovieEndpoint(movieServices, tracerInstance)
 	movieServer := transport.NewMovieHTTPServer(movieEndpoint)
 	r.PathPrefix("/movie").Handler(movieServer)
 }

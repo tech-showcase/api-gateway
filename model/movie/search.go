@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/tracing/opentracing"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	stdopentracing "github.com/opentracing/opentracing-go"
 	movieProto "github.com/tech-showcase/api-gateway/proto/movie"
 	"google.golang.org/grpc"
 )
@@ -19,8 +22,12 @@ type (
 	}
 )
 
-func makeSearchMovieClientEndpoint(conn *grpc.ClientConn) endpoint.Endpoint {
+func makeSearchMovieClientEndpoint(conn *grpc.ClientConn, logger log.Logger) endpoint.Endpoint {
+	tracer := stdopentracing.GlobalTracer()
+
 	clientOptions := make([]grpctransport.ClientOption, 0)
+	clientOptions = append(clientOptions, grpctransport.ClientBefore(opentracing.ContextToGRPC(tracer, logger)))
+
 	searchMovieEndpoint := grpctransport.NewClient(
 		conn,
 		"Movie",

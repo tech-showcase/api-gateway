@@ -1,10 +1,11 @@
 package movie
 
 import (
-	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd"
 	"github.com/go-kit/kit/sd/lb"
+	stdopentracing "github.com/opentracing/opentracing-go"
 	"github.com/tech-showcase/api-gateway/endpoint"
+	"github.com/tech-showcase/api-gateway/middleware"
 	"github.com/tech-showcase/api-gateway/service"
 	"time"
 )
@@ -15,10 +16,12 @@ type (
 	}
 )
 
-func NewMovieEndpoint(movieServices []service.MovieService, logger log.Logger) (movieEndpoint Endpoint) {
+func NewMovieEndpoint(movieServices []service.MovieService, tracer stdopentracing.Tracer) (movieEndpoint Endpoint) {
 	endpointer := sd.FixedEndpointer{}
 	for _, movieService := range movieServices {
-		searchMovieEndpoint := makeSearchMovieEndpoint(movieService, logger)
+		searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
+		searchMovieEndpoint = middleware.ApplyTracerServer("searchMovie-endpoint", searchMovieEndpoint, tracer)
+
 		endpointer = append(endpointer, searchMovieEndpoint)
 	}
 

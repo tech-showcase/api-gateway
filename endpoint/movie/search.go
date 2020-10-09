@@ -4,9 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/go-kit/kit/endpoint"
-	"github.com/go-kit/kit/log"
 	"github.com/tech-showcase/api-gateway/helper"
-	"github.com/tech-showcase/api-gateway/middleware"
 	"github.com/tech-showcase/api-gateway/model/movie"
 	"github.com/tech-showcase/api-gateway/service"
 	"net/http"
@@ -22,7 +20,7 @@ type (
 	}
 )
 
-func makeSearchMovieEndpoint(movieService service.MovieService, logger log.Logger) endpoint.Endpoint {
+func makeSearchMovieEndpoint(movieService service.MovieService) endpoint.Endpoint {
 	searchMovieEndpoint := func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(SearchMovieRequest)
 		result, err := movieService.Search(ctx, req.SearchMovieRequest)
@@ -33,10 +31,9 @@ func makeSearchMovieEndpoint(movieService service.MovieService, logger log.Logge
 		res := SearchMovieResponse{
 			SearchMovieResponse: result,
 		}
+
 		return res, nil
 	}
-
-	searchMovieEndpoint = middleware.ApplyCircuitBreaker("searchMovie", searchMovieEndpoint, logger)
 
 	return searchMovieEndpoint
 }

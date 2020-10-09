@@ -3,6 +3,9 @@ package movie
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	stdopentracing "github.com/opentracing/opentracing-go"
+	"github.com/tech-showcase/api-gateway/middleware"
 	"google.golang.org/grpc"
 )
 
@@ -29,7 +32,7 @@ type (
 	}
 )
 
-func NewMovieClientEndpoint(entertainmentServiceAddress string) (ClientEndpoint, error) {
+func NewMovieClientEndpoint(entertainmentServiceAddress string, logger log.Logger, tracer stdopentracing.Tracer) (ClientEndpoint, error) {
 	instance := clientEndpoint{}
 
 	conn, err := grpc.Dial(entertainmentServiceAddress, grpc.WithInsecure())
@@ -38,7 +41,10 @@ func NewMovieClientEndpoint(entertainmentServiceAddress string) (ClientEndpoint,
 	}
 	instance.conn = conn
 
-	instance.search = makeSearchMovieClientEndpoint(conn)
+	searchMovieEndpoint := makeSearchMovieClientEndpoint(conn, logger)
+	searchMovieEndpoint = middleware.ApplyTracerClient("searchMovie-model", searchMovieEndpoint, tracer)
+	searchMovieEndpoint = middleware.ApplyCircuitBreaker("searchMovie", searchMovieEndpoint, logger)
+	instance.search = searchMovieEndpoint
 
 	return &instance, nil
 }
