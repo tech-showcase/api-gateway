@@ -10,7 +10,14 @@ import (
 
 func init() {
 	config.Instance = config.Read()
+
 	helper.LoggerInstance = helper.NewLogger()
+
+	var err error
+	helper.TracerInstance, _, err = helper.NewTracer()
+	if err != nil {
+		helper.LoggerInstance.Log("NewTracer", err)
+	}
 }
 
 func main() {
