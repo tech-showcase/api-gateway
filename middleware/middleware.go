@@ -4,6 +4,8 @@ import (
 	"github.com/go-kit/kit/circuitbreaker"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/tracing/opentracing"
+	stdopentracing "github.com/opentracing/opentracing-go"
 	"github.com/sony/gobreaker"
 	"time"
 )
@@ -17,5 +19,15 @@ func ApplyCircuitBreaker(name string, endpoint endpoint.Endpoint, logger log.Log
 		},
 	}))(endpoint)
 
+	return
+}
+
+func ApplyTracerServer(operationName string, endpoint endpoint.Endpoint, tracer stdopentracing.Tracer) (wrappedEndpoint endpoint.Endpoint) {
+	wrappedEndpoint = opentracing.TraceServer(tracer, operationName)(endpoint)
+	return
+}
+
+func ApplyTracerClient(operationName string, endpoint endpoint.Endpoint, tracer stdopentracing.Tracer) (wrappedEndpoint endpoint.Endpoint) {
+	wrappedEndpoint = opentracing.TraceClient(tracer, operationName)(endpoint)
 	return
 }
