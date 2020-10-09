@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/tracing/opentracing"
 	httptransport "github.com/go-kit/kit/transport/http"
+	stdopentracing "github.com/opentracing/opentracing-go"
 	"github.com/tech-showcase/api-gateway/helper"
 	"net/http"
 	"net/url"
@@ -24,14 +27,18 @@ type (
 	}
 )
 
-func makeGetCovid19ClientEndpoint(covid19ServiceURL *url.URL) endpoint.Endpoint {
+func makeGetCovid19ClientEndpoint(covid19ServiceURL *url.URL, logger log.Logger, tracer stdopentracing.Tracer) endpoint.Endpoint {
 	getCovid19URL, _ := helper.JoinURL(covid19ServiceURL, "/covid19")
+
+	clientOptions := make([]httptransport.ClientOption, 0)
+	clientOptions = append(clientOptions, httptransport.ClientBefore(opentracing.ContextToHTTP(tracer, logger)))
 
 	getCovid19Endpoint := httptransport.NewClient(
 		http.MethodGet,
 		getCovid19URL,
 		encodeGetCovid19HTTPRequest,
 		decodeGetCovid19HTTPResponse,
+		clientOptions...,
 	).Endpoint()
 
 	return getCovid19Endpoint
