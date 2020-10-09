@@ -41,7 +41,7 @@ func NewMovieClientEndpoint(entertainmentServiceAddress string, logger log.Logge
 	}
 	instance.conn = conn
 
-	searchMovieEndpoint := makeSearchMovieClientEndpoint(conn, logger)
+	searchMovieEndpoint := makeSearchMovieClientEndpoint(conn, logger, tracer)
 	searchMovieEndpoint = middleware.ApplyTracerClient("searchMovie-model", searchMovieEndpoint, tracer)
 	searchMovieEndpoint = middleware.ApplyCircuitBreaker("searchMovie", searchMovieEndpoint, logger)
 	instance.search = searchMovieEndpoint

@@ -22,9 +22,7 @@ type (
 	}
 )
 
-func makeSearchMovieClientEndpoint(conn *grpc.ClientConn, logger log.Logger) endpoint.Endpoint {
-	tracer := stdopentracing.GlobalTracer()
-
+func makeSearchMovieClientEndpoint(conn *grpc.ClientConn, logger log.Logger, tracer stdopentracing.Tracer) endpoint.Endpoint {
 	clientOptions := make([]grpctransport.ClientOption, 0)
 	clientOptions = append(clientOptions, grpctransport.ClientBefore(opentracing.ContextToGRPC(tracer, logger)))
 
