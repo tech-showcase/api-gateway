@@ -1,7 +1,6 @@
 package movie
 
 import (
-	"fmt"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/sd"
@@ -14,8 +13,6 @@ import (
 
 func newSearchMovieFactory(makeModel movie.ModelFactory, logger log.Logger, tracer stdopentracing.Tracer) sd.Factory {
 	return func(entertainmentServiceAddress string) (endpoint.Endpoint, io.Closer, error) {
-		fmt.Println("entertainmentServiceAddress", entertainmentServiceAddress)
-
 		movieClientEndpoint, err := makeModel(entertainmentServiceAddress, logger, tracer)
 		if err != nil {
 			return nil, nil, err
