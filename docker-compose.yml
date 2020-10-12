@@ -1,0 +1,91 @@
+version: '3.1'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api-gateway
+    ports:
+      - 8086:8080
+    networks:
+      - api-gateway
+    environment:
+#      ENTERTAINMENT_SERVICE_ADDRESS: entertainment-service:8080,entertainment-service-2:8080
+      COVID19_SERVICE_ADDRESS: covid19-service:8080
+      TRACER_AGENT_ADDRESS: jaeger-tracing:5775
+      CONSUL_AGENT_ADDRESS: consul-server:8500
+    depends_on:
+      - consul-server
+
+  entertainment-service:
+    image: entertainment-service
+    command: server
+    ports:
+      - 8085:8080
+    networks:
+      - api-gateway
+    environment:
+      MOVIE_SERVER_ADDRESS: http://www.omdbapi.com/
+      MOVIE_API_KEY: faf7e5bb
+      TRACER_AGENT_ADDRESS: jaeger-tracing:5775
+    depends_on:
+      - consul-server
+
+  entertainment-service-2:
+    image: entertainment-service
+    command: server
+    ports:
+      - 8084:8080
+    networks:
+      - api-gateway
+    environment:
+      MOVIE_SERVER_ADDRESS: http://www.omdbapi.com/
+      MOVIE_API_KEY: faf7e5bb
+      TRACER_AGENT_ADDRESS: jaeger-tracing:5775
+    depends_on:
+      - consul-server
+
+  covid19-service:
+    image: covid19-service
+    command: server
+    ports:
+      - 8083:8080
+    networks:
+      - api-gateway
+    environment:
+      ADDRESS: https://api.covid19api.com
+      TRACER_AGENT_ADDRESS: jaeger-tracing:5775
+    depends_on:
+      - consul-server
+
+  consul-server:
+    image: consul
+    container_name: consul-server
+    command: agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0
+    ports:
+      - 8500:8500
+      - 8600:8600/udp
+    networks:
+      - api-gateway
+
+  consul-client:
+    image: consul
+    container_name: consul-client
+    command: agent -node=client-1 -join=consul-server
+    networks:
+      - api-gateway
+    depends_on:
+      - consul-server
+
+  jaeger-tracing:
+    image: jaegertracing/all-in-one
+    ports:
+      - 5775:5775/udp
+      - 16686:16686
+    networks:
+      - api-gateway
+
+networks:
+  api-gateway:
+    driver: bridge
