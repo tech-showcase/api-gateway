@@ -8,13 +8,17 @@ import (
 type (
 	Config struct {
 		ServiceName                   string   `json:"service_name"`
-		ConsulAddress                 string   `json:"consul_address"`
 		EntertainmentServiceAddresses []string `json:"entertainment_service_address"`
 		Covid19ServiceAddresses       []string `json:"covid19_service_address"`
 		Tracer                        Tracer   `json:"tracer"`
+		Consul                        Consul   `json:"consul"`
 	}
 
 	Tracer struct {
+		AgentAddress string `json:"agent_address"`
+	}
+
+	Consul struct {
 		AgentAddress string `json:"agent_address"`
 	}
 )
@@ -33,10 +37,10 @@ func Read() (config Config) {
 
 func readFromEnvVar() (config Config) {
 	config.ServiceName = readEnvVarWithDefaultValue("SERVICE_NAME", "api-gateway")
-	config.ConsulAddress = readEnvVarWithDefaultValue("CONSUL_ADDRESS", "http://localhost")
 	config.EntertainmentServiceAddresses = readEnvVarArrayWithDefaultValue("ENTERTAINMENT_SERVICE_ADDRESS", []string{"localhost:8085"})
 	config.Covid19ServiceAddresses = readEnvVarArrayWithDefaultValue("COVID19_SERVICE_ADDRESS", []string{"localhost:8083"})
 	config.Tracer.AgentAddress = readEnvVarWithDefaultValue("TRACER_AGENT_ADDRESS", "localhost:5775")
+	config.Consul.AgentAddress = readEnvVarWithDefaultValue("CONSUL_AGENT_ADDRESS", "localhost:8500")
 
 	return
 }

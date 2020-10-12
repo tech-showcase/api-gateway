@@ -22,16 +22,15 @@ func setDummyEnvVar() {
 	dummyConfig := getDummyConfig()
 
 	os.Setenv("SERVICE_NAME", dummyConfig.ServiceName)
-	os.Setenv("CONSUL_ADDRESS", dummyConfig.ConsulAddress)
 	os.Setenv("ENTERTAINMENT_SERVICE_ADDRESS", strings.Join(dummyConfig.EntertainmentServiceAddresses, arrayDelimiter))
 	os.Setenv("COVID19_SERVICE_ADDRESS", strings.Join(dummyConfig.Covid19ServiceAddresses, arrayDelimiter))
 	os.Setenv("TRACER_AGENT_ADDRESS", dummyConfig.Tracer.AgentAddress)
+	os.Setenv("CONSUL_AGENT_ADDRESS", dummyConfig.Consul.AgentAddress)
 }
 
 func getDummyConfig() Config {
 	dummyConfig := Config{
 		ServiceName:   "service-name",
-		ConsulAddress: "consul-address",
 		EntertainmentServiceAddresses: []string{
 			"entertainment-service-address-1",
 			"entertainment-service-address-2",
@@ -42,6 +41,9 @@ func getDummyConfig() Config {
 		},
 		Tracer: Tracer{
 			AgentAddress: "tracer-agent-address",
+		},
+		Consul: Consul{
+			AgentAddress: "consul-agent-address",
 		},
 	}
 
