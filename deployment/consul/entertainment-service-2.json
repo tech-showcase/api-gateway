@@ -1,0 +1,14 @@
+{
+  "service": {
+    "id": "entertainment-service-2",
+    "name": "entertainment-service",
+    "tags": [
+      "go"
+    ],
+    "address": "entertainment-service-2",
+    "port": 8080,
+    "connect": {
+      "native": false
+    }
+  }
+}
