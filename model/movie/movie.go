@@ -30,6 +30,8 @@ type (
 	ClientEndpoint interface {
 		Search(context.Context, SearchMovieRequest) (SearchMovieResponse, error)
 	}
+
+	ModelFactory func(entertainmentServiceAddress string, logger log.Logger, tracer stdopentracing.Tracer) (ClientEndpoint, error)
 )
 
 func NewMovieClientEndpoint(entertainmentServiceAddress string, logger log.Logger, tracer stdopentracing.Tracer) (ClientEndpoint, error) {

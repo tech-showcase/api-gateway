@@ -1,35 +1,36 @@
 package movie
 
 import (
-	"github.com/go-kit/kit/sd"
-	"github.com/go-kit/kit/sd/lb"
+	"github.com/go-kit/kit/log"
+	consulsd "github.com/go-kit/kit/sd/consul"
 	stdopentracing "github.com/opentracing/opentracing-go"
-	"github.com/tech-showcase/api-gateway/endpoint"
-	"github.com/tech-showcase/api-gateway/middleware"
+	generalEndpoint "github.com/tech-showcase/api-gateway/endpoint"
 	"github.com/tech-showcase/api-gateway/service"
-	"time"
 )
 
 type (
 	Endpoint struct {
-		Search endpoint.HTTPEndpoint
+		Search generalEndpoint.HTTPEndpoint
 	}
 )
 
 func NewMovieEndpoint(movieServices []service.MovieService, tracer stdopentracing.Tracer) (movieEndpoint Endpoint) {
-	endpointer := sd.FixedEndpointer{}
-	for _, movieService := range movieServices {
-		searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
-		searchMovieEndpoint = middleware.ApplyTracerServer("searchMovie-endpoint", searchMovieEndpoint, tracer)
+	searchMovieEndpoint := newSearchMovieFixedEndpoint(movieServices, tracer)
 
-		endpointer = append(endpointer, searchMovieEndpoint)
+	movieEndpoint.Search = generalEndpoint.HTTPEndpoint{
+		Endpoint: searchMovieEndpoint,
+		Decoder:  decodeSearchMovieRequest,
+		Encoder:  encodeResponse,
 	}
 
-	balancer := lb.NewRoundRobin(endpointer)
-	retry := lb.Retry(3, 500*time.Millisecond, balancer)
+	return movieEndpoint
+}
 
-	movieEndpoint.Search = endpoint.HTTPEndpoint{
-		Endpoint: retry,
+func NewConsulMovieEndpoint(consulClient consulsd.Client, tracer stdopentracing.Tracer, logger log.Logger) (movieEndpoint Endpoint) {
+	searchMovieEndpoint := newSearchMovieConsulEndpoint(consulClient, "entertainment-service", tracer, logger)
+
+	movieEndpoint.Search = generalEndpoint.HTTPEndpoint{
+		Endpoint: searchMovieEndpoint,
 		Decoder:  decodeSearchMovieRequest,
 		Encoder:  encodeResponse,
 	}
