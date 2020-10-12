@@ -18,6 +18,11 @@ func init() {
 	if err != nil {
 		helper.LoggerInstance.Log("NewTracer", err)
 	}
+
+	helper.ConsulInstance, err = helper.NewConsulClient(config.Instance.Consul.AgentAddress)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
