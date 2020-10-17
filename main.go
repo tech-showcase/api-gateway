@@ -11,9 +11,13 @@ import (
 func init() {
 	config.Instance = config.Read()
 
-	helper.LoggerInstance = helper.NewLogger()
-
+	//helper.LoggerInstance = helper.NewLogger()
 	var err error
+	helper.LoggerInstance, err = helper.NewFileLogger(config.Instance.Log.Filepath)
+	if err != nil {
+		panic(err)
+	}
+
 	helper.TracerInstance, _, err = helper.NewTracer(config.Instance.ServiceName, config.Instance.Tracer.AgentAddress)
 	if err != nil {
 		helper.LoggerInstance.Log("NewTracer", err)
