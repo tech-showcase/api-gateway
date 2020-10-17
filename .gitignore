@@ -16,3 +16,6 @@
 
 # IDE generated file
 .idea/
+
+# Log file
+*.log
