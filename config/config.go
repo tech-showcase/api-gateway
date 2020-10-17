@@ -12,6 +12,7 @@ type (
 		Covid19ServiceAddresses       []string `json:"covid19_service_address"`
 		Tracer                        Tracer   `json:"tracer"`
 		Consul                        Consul   `json:"consul"`
+		Log                           Log      `json:"log"`
 	}
 
 	Tracer struct {
@@ -20,6 +21,10 @@ type (
 
 	Consul struct {
 		AgentAddress string `json:"agent_address"`
+	}
+
+	Log struct {
+		Filepath string `json:"filepath"`
 	}
 )
 
@@ -41,6 +46,7 @@ func readFromEnvVar() (config Config) {
 	config.Covid19ServiceAddresses = readEnvVarArrayWithDefaultValue("COVID19_SERVICE_ADDRESS", []string{"localhost:8083"})
 	config.Tracer.AgentAddress = readEnvVarWithDefaultValue("TRACER_AGENT_ADDRESS", "localhost:5775")
 	config.Consul.AgentAddress = readEnvVarWithDefaultValue("CONSUL_AGENT_ADDRESS", "localhost:8500")
+	config.Log.Filepath = readEnvVarWithDefaultValue("LOG_FILEPATH", "./server.log")
 
 	return
 }
