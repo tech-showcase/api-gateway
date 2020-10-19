@@ -9,7 +9,8 @@ services:
     ports:
       - 8086:8080
     networks:
-      - api-gateway
+      - entertainment-service
+      - covid19-service
       - service-discovery
       - observability
     environment:
@@ -17,12 +18,16 @@ services:
       COVID19_SERVICE_ADDRESS: covid19-service:8080
       TRACER_AGENT_ADDRESS: jaeger-tracing:5775
       CONSUL_AGENT_ADDRESS: consul-server:8500
-    depends_on:
-      - consul-server
+#    depends_on:
+#      - consul-server
 
 networks:
-  api-gateway:
-    driver: bridge
+  entertainment-service:
+    external:
+      name: entertainment-service_entertainment-service
+  covid19-service:
+    external:
+      name: covid19-service_covid19-service
   service-discovery:
     external:
       name: service-discovery_service-discovery
