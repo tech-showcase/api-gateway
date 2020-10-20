@@ -13,13 +13,30 @@ services:
       - covid19-service
       - service-discovery
       - observability
+    volumes:
+      - api-gateway-log:/log
     environment:
 #      ENTERTAINMENT_SERVICE_ADDRESS: entertainment-service:8080,entertainment-service-2:8080
       COVID19_SERVICE_ADDRESS: covid19-service:8080
       TRACER_AGENT_ADDRESS: jaeger-tracing:5775
       CONSUL_AGENT_ADDRESS: consul-server:8500
+      LOG_FILEPATH: /log/server.log
 #    depends_on:
 #      - consul-server
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.7.0
+    volumes:
+      - ./deployment/elastic-stack/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - api-gateway-log:/log
+    networks:
+      - observability
+    depends_on:
+      - api-gateway
+
+volumes:
+  api-gateway-log:
+    driver: local
 
 networks:
   entertainment-service:
