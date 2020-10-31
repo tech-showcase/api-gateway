@@ -9,6 +9,7 @@ import (
 	"github.com/tech-showcase/api-gateway/model/movie"
 	"github.com/tech-showcase/api-gateway/service"
 	"io"
+	"strings"
 )
 
 func newSearchMovieFactory(makeModel movie.ModelFactory, logger log.Logger, tracer stdopentracing.Tracer) sd.Factory {
@@ -22,6 +23,8 @@ func newSearchMovieFactory(makeModel movie.ModelFactory, logger log.Logger, trac
 
 		searchMovieEndpoint := makeSearchMovieEndpoint(movieService)
 		searchMovieEndpoint = middleware.ApplyTracerServer("searchMovie-endpoint", searchMovieEndpoint, tracer)
+		subsystem := "movie_" + strings.Replace(entertainmentServiceAddress, "-", "_", -1)
+		searchMovieEndpoint = middleware.ApplyMetrics(subsystem, "search", searchMovieEndpoint)
 
 		return searchMovieEndpoint, nil, nil
 	}
