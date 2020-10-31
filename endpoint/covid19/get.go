@@ -30,7 +30,7 @@ func newGetCovid19FixedEndpoint(covid19Services []service.Covid19Service, tracer
 	for index, covid19Service := range covid19Services {
 		getCovid19Endpoint := makeGetCovid19Endpoint(covid19Service)
 		getCovid19Endpoint = middleware.ApplyTracerServer("getCovid19-endpoint", getCovid19Endpoint, tracer)
-		getCovid19Endpoint = middleware.ApplyMetrics("covid19_"+strconv.Itoa(index), "get", getCovid19Endpoint)
+		getCovid19Endpoint = middleware.ApplyMetrics("covid19_"+strconv.Itoa(index+1), "get", getCovid19Endpoint)
 
 		getCovid19Endpointer = append(getCovid19Endpointer, getCovid19Endpoint)
 	}
